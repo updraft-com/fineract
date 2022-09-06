@@ -7,6 +7,7 @@ from requests.auth import HTTPBasicAuth
 import fineract_configuration
 
 
+
 class MifosAPIClient:
     def __init__(self, username=None, password=None, base_url=None):
         self.username = username
@@ -48,6 +49,8 @@ class MifosAPIClient:
 
 @pytest.fixture(autouse=True)
 def mifos_client():
+    # We are using a self signed SSL certificate for testing.   Don't warn, thanks.
+    requests.packages.urllib3.disable_warnings()
     MIFOS_API_URL = "https://localhost:8443/fineract-provider/api/v1"
     MIFOS_USERNAME = "mifos"
     MIFOS_PASSWORD = "password"
@@ -477,6 +480,8 @@ def loan_product_configuration(loanproduct):
 
 @pytest.fixture(scope="session", autouse=True)
 def check_configuration():
+    # We are using a self signed SSL certificate for testing.   Don't warn, thanks.
+    requests.packages.urllib3.disable_warnings()
     global_configuration()
     office_configuration()
     holiday_configuration()
